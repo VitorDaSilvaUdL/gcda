@@ -1,0 +1,46 @@
+[build-system]
+requires = ["setuptools>=64"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "gcda"
+version = "0.1.0"
+description = "Geometric Cross-Domain Adaptability: a GO/NO-GO diagnostic for domain adaptation, before training."
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "MIT" }
+authors = [
+    { name = "Vitor da Silva" },
+    { name = "Computer Science Group, Universitat de Lleida" },
+]
+keywords = [
+    "domain adaptation", "transfer learning", "transferability estimation",
+    "diagnostic", "machine learning", "distribution shift",
+]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Intended Audience :: Science/Research",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+dependencies = [
+    "numpy>=1.21",
+    "scipy>=1.7",
+    "scikit-learn>=1.0",
+]
+
+[project.optional-dependencies]
+plot = ["matplotlib>=3.4"]
+torch = ["torch>=1.10"]
+tf = ["tensorflow>=2.8"]
+dev = ["pytest>=7", "pandas>=1.3", "matplotlib>=3.4"]
+
+[project.scripts]
+gcda = "gcda.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/VitorDaSilvaUdL/gcda"
+Paper = "https://arxiv.org/abs/XXXX.XXXXX"
+
+[tool.setuptools]
+packages = ["gcda"]
