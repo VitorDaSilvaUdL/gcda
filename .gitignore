@@ -9,4 +9,6 @@ __pycache__/
 # example outputs
 quickstart_*.png
 pytorch_gcda_matrix.png
+digits_gcda_matrix.png
+sites.csv
 *.json
