@@ -1,0 +1,63 @@
+cff-version: 1.2.0
+title: "gcda: Geometric Cross-Domain Adaptability"
+message: "If you use this software, please cite both the software and the paper below."
+type: software
+authors:
+  - given-names: Vitor
+    family-names: da Silva
+    orcid: "https://orcid.org/0000-0002-3296-2752"
+  - given-names: Rosana
+    family-names: Tomàs
+    orcid: "https://orcid.org/0000-0002-1995-3974"
+  - given-names: Concepció
+    family-names: Roig
+    orcid: "https://orcid.org/0000-0003-3029-3820"
+  - given-names: Fernando
+    family-names: Cores
+    orcid: "https://orcid.org/0000-0003-2910-6709"
+  - given-names: Fernando
+    family-names: Guirado
+    orcid: "https://orcid.org/0000-0003-1352-9555"
+  - given-names: Josep Lluís
+    family-names: Lérida
+    orcid: "https://orcid.org/0000-0002-9352-9338"
+  - given-names: Francesc
+    family-names: Giné
+    orcid: "https://orcid.org/0000-0002-2348-5018"
+license: MIT
+repository-code: "https://github.com/VitorDaSilvaUdL/gcda"
+version: 0.1.0
+date-released: "2026-06-05"
+keywords:
+  - domain adaptation
+  - transferability estimation
+  - distribution shift
+  - domain generalization
+  - diagnostic
+preferred-citation:
+  type: article
+  title: "GCDA: A Geometric Cross-Domain Adaptability Diagnostic for Deciding Whether Domain Adaptation Can Help, Before Training"
+  year: 2026
+  notes: "Submitted to IEEE Access; arXiv preprint forthcoming (DOI 10.48550/arXiv.XXXX.XXXXX)."
+  authors:
+    - given-names: Vitor
+      family-names: da Silva
+      orcid: "https://orcid.org/0000-0002-3296-2752"
+    - given-names: Rosana
+      family-names: Tomàs
+      orcid: "https://orcid.org/0000-0002-1995-3974"
+    - given-names: Concepció
+      family-names: Roig
+      orcid: "https://orcid.org/0000-0003-3029-3820"
+    - given-names: Fernando
+      family-names: Cores
+      orcid: "https://orcid.org/0000-0003-2910-6709"
+    - given-names: Fernando
+      family-names: Guirado
+      orcid: "https://orcid.org/0000-0003-1352-9555"
+    - given-names: Josep Lluís
+      family-names: Lérida
+      orcid: "https://orcid.org/0000-0002-9352-9338"
+    - given-names: Francesc
+      family-names: Giné
+      orcid: "https://orcid.org/0000-0002-2348-5018"
