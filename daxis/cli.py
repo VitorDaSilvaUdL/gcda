@@ -1,6 +1,6 @@
-"""``gcda`` command-line entry point.
+"""``daxis`` command-line entry point.
 
-    gcda data.csv --label y --domain env --mode auto --plot m.png
+    daxis data.csv --label y --domain env --mode auto --plot m.png
 
 Accepts a CSV (one row per sample; a label column, a domain column and the
 rest features) or an ``.npz`` with arrays ``X``, ``y``, ``domain``.
@@ -13,8 +13,8 @@ import json
 
 def _build_parser():
     ap = argparse.ArgumentParser(
-        prog="gcda",
-        description="Geometric Cross-Domain Adaptability -- a GO/NO-GO "
+        prog="daxis",
+        description="Discriminant-Axis Alignment -- a GO/NO-GO "
                     "diagnostic for domain adaptation, before training.")
     ap.add_argument("data", help="path to a .csv or .npz file")
     ap.add_argument("--label", default="label", help="label column (CSV)")
@@ -38,9 +38,9 @@ def main(argv=None):
 
     if args.data.endswith(".npz"):
         import numpy as np
-        from .core import gcda_score
+        from .core import daxis_score
         z = np.load(args.data, allow_pickle=True)
-        res = gcda_score(z["X"], z["y"], z["domain"], **kw)
+        res = daxis_score(z["X"], z["y"], z["domain"], **kw)
     else:
         import pandas as pd
         from .adapters import from_dataframe

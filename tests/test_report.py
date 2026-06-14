@@ -1,10 +1,10 @@
-"""Tests for GCDAResult: report text, serialisation, plotting, verdict."""
+"""Tests for DAXISResult: report text, serialisation, plotting, verdict."""
 import json
 
 import numpy as np
 import pytest
 
-import gcda
+import daxis
 
 
 def _result(seed=0):
@@ -19,13 +19,13 @@ def _result(seed=0):
         blocks_X.append(X)
         blocks_y.append(y)
         blocks_d.append(np.array([f"d{i}"] * 200))
-    return gcda.gcda_score(np.vstack(blocks_X), np.concatenate(blocks_y),
+    return daxis.daxis_score(np.vstack(blocks_X), np.concatenate(blocks_y),
                            np.concatenate(blocks_d), n_boot=60, n_perm=60)
 
 
 def test_report_contains_key_fields():
     text = _result().report()
-    for token in ("GCDA report", "GCDA score", "CI", "regime", "aligned"):
+    for token in ("DAXIS report", "DAXIS score", "CI", "regime", "aligned"):
         assert token in text
 
 
@@ -55,4 +55,4 @@ def test_verdict_matches_regime():
 
 def test_str_is_compact():
     s = str(_result())
-    assert s.startswith("GCDAResult(") and "score=" in s
+    assert s.startswith("DAXISResult(") and "score=" in s

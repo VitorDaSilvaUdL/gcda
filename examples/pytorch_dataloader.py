@@ -1,17 +1,17 @@
-"""Run GCDA straight off a PyTorch DataLoader, using a frozen ResNet-50 backbone.
+"""Run DAXIS straight off a PyTorch DataLoader, using a frozen ResNet-50 backbone.
 
 This is the pattern for image domain-generalisation benchmarks (PACS,
-Office-Home, Camelyon17, ...): freeze an ImageNet backbone, let GCDA pull the
+Office-Home, Camelyon17, ...): freeze an ImageNet backbone, let DAXIS pull the
 features out of your existing loader, and read the GO / NO-GO verdict.
 
-    pip install gcda[torch] torchvision
+    pip install daxis[torch] torchvision
     python examples/pytorch_dataloader.py
 """
 import torch
 import torchvision as tv
 from torch.utils.data import DataLoader, TensorDataset
 
-import gcda
+import daxis
 
 # ---------------------------------------------------------------------------
 # 1) Your data.  Any DataLoader works; here we fake one whose batches are
@@ -37,7 +37,7 @@ device = "cuda" if torch.cuda.is_available() else "cpu"
 # 3) One call.  domain_fn pulls the domain out of each batch (here element 2).
 #    mode="classwise" is the right choice for high-dimensional deep features.
 # ---------------------------------------------------------------------------
-res = gcda.from_torch(
+res = daxis.from_torch(
     loader,
     backbone=backbone,
     device=device,
@@ -45,5 +45,5 @@ res = gcda.from_torch(
     mode="binary",            # 2 classes here; use "classwise" for many classes
 )
 print(res.report())
-res.plot("pytorch_gcda_matrix.png")
-print("[saved] pytorch_gcda_matrix.png")
+res.plot("pytorch_daxis_matrix.png")
+print("[saved] pytorch_daxis_matrix.png")

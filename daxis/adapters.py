@@ -1,5 +1,5 @@
 """Adapters -- build ``(X, y, domain)`` from common data containers, then run
-GCDA.  The deep-learning frameworks are imported lazily, so ``import gcda``
+DAXIS.  The deep-learning frameworks are imported lazily, so ``import daxis``
 never requires torch or tensorflow to be installed.
 
 Conventions
@@ -15,17 +15,17 @@ from __future__ import annotations
 
 import numpy as np
 
-from .core import gcda_score
+from .core import daxis_score
 
 
 def from_arrays(X, y, domain, **kw):
-    """Thin alias of :func:`gcda.gcda_score` for explicit array inputs."""
-    return gcda_score(X, y, domain, **kw)
+    """Thin alias of :func:`daxis.daxis_score` for explicit array inputs."""
+    return daxis_score(X, y, domain, **kw)
 
 
 def from_dataframe(df, feature_cols=None, label_col="label",
                    domain_col="domain", **kw):
-    """Run GCDA on a :class:`pandas.DataFrame`.
+    """Run DAXIS on a :class:`pandas.DataFrame`.
 
     ``feature_cols`` defaults to every column except the label and domain.
     """
@@ -34,7 +34,7 @@ def from_dataframe(df, feature_cols=None, label_col="label",
     X = df[feature_cols].to_numpy(dtype=float)
     y = df[label_col].to_numpy()
     domain = df[domain_col].to_numpy()
-    return gcda_score(X, y, domain, **kw)
+    return daxis_score(X, y, domain, **kw)
 
 
 # -- PyTorch -------------------------------------------------------------
@@ -73,25 +73,25 @@ def _collect_torch(loader, backbone, device, domain_fn, label_index,
 
 def from_torch(loader, backbone=None, device="cpu", domain_fn=None,
                label_index=1, max_batches=None, **kw):
-    """Run GCDA on the features a :class:`torch.utils.data.DataLoader` yields.
+    """Run DAXIS on the features a :class:`torch.utils.data.DataLoader` yields.
 
     Example
     -------
-    >>> import torchvision, torch, gcda
+    >>> import torchvision, torch, daxis
     >>> net = torchvision.models.resnet50(weights="IMAGENET1K_V2")
     >>> net.fc = torch.nn.Identity()              # 2048-d features
-    >>> res = gcda.from_torch(loader, backbone=net, device="cuda",
+    >>> res = daxis.from_torch(loader, backbone=net, device="cuda",
     ...                       domain_fn=lambda b: b[2][:, 0], mode="classwise")
     >>> print(res.report())
     """
     X, y, domain = _collect_torch(loader, backbone, device, domain_fn,
                                   label_index, max_batches)
-    return gcda_score(X, y, domain, **kw)
+    return daxis_score(X, y, domain, **kw)
 
 
 # -- TensorFlow ----------------------------------------------------------
 def from_tensorflow(ds, backbone=None, domain_fn=None, max_batches=None, **kw):
-    """Run GCDA on the features a ``tf.data.Dataset`` yields.
+    """Run DAXIS on the features a ``tf.data.Dataset`` yields.
 
     The dataset is expected to yield ``(x, y)`` or ``(x, y, meta)``.  Pass
     ``domain_fn(batch) -> array`` if the domain lives elsewhere.
@@ -111,6 +111,6 @@ def from_tensorflow(ds, backbone=None, domain_fn=None, max_batches=None, **kw):
             doms.append(np.asarray(batch[2]).ravel())
         else:
             raise ValueError("no domain in the batch; pass domain_fn")
-    return gcda_score(np.concatenate(feats, 0),
+    return daxis_score(np.concatenate(feats, 0),
                       np.concatenate(labs, 0),
                       np.concatenate(doms, 0), **kw)

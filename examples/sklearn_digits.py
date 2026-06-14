@@ -1,6 +1,6 @@
 """A real-data example with zero downloads: scikit-learn handwritten digits.
 
-We build three *domains* from the 8x8 digit images and ask GCDA whether the
+We build three *domains* from the 8x8 digit images and ask DAXIS whether the
 class-discriminant geometry survives the shift:
 
   * ``original``    -- the raw images,
@@ -9,7 +9,7 @@ class-discriminant geometry survives the shift:
   * ``scrambled``   -- images with a fixed pixel permutation (destroys the
                        shared discriminant axis).
 
-GCDA should report a high cosine between ``original`` and ``noisy`` and a low
+DAXIS should report a high cosine between ``original`` and ``noisy`` and a low
 one to ``scrambled`` -- a GO for the first pair, a NO-GO for the second.
 
     python examples/sklearn_digits.py
@@ -17,7 +17,7 @@ one to ``scrambled`` -- a GO for the first pair, a NO-GO for the second.
 import numpy as np
 from sklearn.datasets import load_digits
 
-import gcda
+import daxis
 
 rng = np.random.default_rng(0)
 X, y = load_digits(return_X_y=True)          # (1797, 64), 10 classes
@@ -37,9 +37,9 @@ Xa = np.vstack([X1, X2, X3])
 ya = np.concatenate([y1, y2, y3])
 dom = np.array(["original"] * len(y1) + ["noisy"] * len(y2) + ["scrambled"] * len(y3))
 
-res = gcda.gcda_score(Xa, ya, dom, mode="classwise")
+res = daxis.daxis_score(Xa, ya, dom, mode="classwise")
 print(res.report())
 print("\noriginal<->noisy     :", round(res.matrix[0, 1], 3), "(expect high -- GO)")
 print("original<->scrambled :", round(res.matrix[0, 2], 3), "(expect low  -- NO-GO)")
-res.plot("digits_gcda_matrix.png")
-print("[saved] digits_gcda_matrix.png")
+res.plot("digits_daxis_matrix.png")
+print("[saved] digits_daxis_matrix.png")

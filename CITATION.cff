@@ -1,5 +1,5 @@
 cff-version: 1.2.0
-title: "gcda: Geometric Cross-Domain Adaptability"
+title: "daxis: Discriminant-Axis Alignment"
 message: "If you use this software, please cite both the software and the paper below."
 type: software
 authors:
@@ -25,7 +25,7 @@ authors:
     family-names: Giné
     orcid: "https://orcid.org/0000-0002-2348-5018"
 license: MIT
-repository-code: "https://github.com/VitorDaSilvaUdL/gcda"
+repository-code: "https://github.com/VitorDaSilvaUdL/daxis"
 version: 0.1.0
 date-released: "2026-06-05"
 keywords:
@@ -36,7 +36,7 @@ keywords:
   - diagnostic
 preferred-citation:
   type: article
-  title: "GCDA: A Geometric Cross-Domain Adaptability Diagnostic for Deciding Whether Domain Adaptation Can Help, Before Training"
+  title: "DAXIS: A Discriminant-Axis Alignment Diagnostic for Deciding Whether Domain Adaptation Can Help, Before Training"
   year: 2026
   notes: "Submitted to IEEE Access; arXiv preprint forthcoming (DOI 10.48550/arXiv.XXXX.XXXXX)."
   authors:

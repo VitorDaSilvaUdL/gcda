@@ -1,13 +1,13 @@
-"""Core GCDA computation.
+"""Core DAXIS computation.
 
-GCDA (Geometric Cross-Domain Adaptability) reads, *before any adaptation
+DAXIS (Discriminant-Axis Alignment) reads, *before any adaptation
 training*, whether several domains share a class-discriminant direction.  For
 each domain ``b`` it forms the unit class-discriminant direction
 
     d_b = (mu_b^+ - mu_b^-) / || mu_b^+ - mu_b^- ||                  (binary)
 
 and reports the mean off-diagonal pairwise cosine ``mean_{b != b'} <d_b, d_b'>``
-as the *GCDA score*.  A score near ``+1`` means a shared boundary (adaptation
+as the *DAXIS score*.  A score near ``+1`` means a shared boundary (adaptation
 can transfer it -- a GO); near ``0`` means the boundaries are unrelated (a
 NO-GO).  Multiclass problems use principal angles between per-domain LDA
 subspaces; high-dimensional deep features use a class-wise one-vs-rest variant.
@@ -21,7 +21,7 @@ from scipy.stats import norm
 from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
 from sklearn.preprocessing import StandardScaler
 
-from .report import GCDAResult
+from .report import DAXISResult
 
 EPS = 1e-12
 MODES = ("auto", "binary", "classwise", "subspace")
@@ -85,9 +85,9 @@ def _offdiag_mean(R, doms, mode, classes):
 
 
 # -- public --------------------------------------------------------------
-def gcda_score(X, y, domain, mode="auto", n_boot=500, n_perm=500,
+def daxis_score(X, y, domain, mode="auto", n_boot=500, n_perm=500,
                standardize=True, random_state=0, ci=95.0):
-    """Compute the GCDA GO / NO-GO diagnostic.
+    """Compute the DAXIS GO / NO-GO diagnostic.
 
     Parameters
     ----------
@@ -114,7 +114,7 @@ def gcda_score(X, y, domain, mode="auto", n_boot=500, n_perm=500,
 
     Returns
     -------
-    GCDAResult
+    DAXISResult
     """
     if mode not in MODES:
         raise ValueError(f"mode must be one of {MODES}, got {mode!r}")
@@ -145,7 +145,7 @@ def gcda_score(X, y, domain, mode="auto", n_boot=500, n_perm=500,
     for d in doms:
         if not _has_all_classes(y[idx[d]], classes):
             raise ValueError(f"domain {d!r} is missing one of the classes "
-                             f"{classes.tolist()}; GCDA needs every class in "
+                             f"{classes.tolist()}; DAXIS needs every class in "
                              "every domain")
 
     # point estimate + full pairwise matrix
@@ -206,7 +206,7 @@ def gcda_score(X, y, domain, mode="auto", n_boot=500, n_perm=500,
     else:
         regime = "BORDERLINE"
 
-    return GCDAResult(
+    return DAXISResult(
         score=score, ci=(ci_lo, ci_hi), ci_level=float(ci), p_value=p_value,
         matrix=M, domains=[str(d) for d in doms], mode=mode,
         n_classes=int(K), n_samples=int(X.shape[0]), n_features=int(X.shape[1]),

@@ -1,8 +1,8 @@
-"""Behavioural tests for the GCDA core: aligned domains -> GO, orthogonal -> NO-GO."""
+"""Behavioural tests for the DAXIS core: aligned domains -> GO, orthogonal -> NO-GO."""
 import numpy as np
 import pytest
 
-import gcda
+import daxis
 
 
 def _binary_domain(n=300, p=20, angle=0.0, seed=0):
@@ -25,7 +25,7 @@ def _stack(domains):
 def test_go_when_aligned():
     X, y, dom = _stack([_binary_domain(angle=0.0, seed=1),
                         _binary_domain(angle=0.0, seed=2)])
-    r = gcda.gcda_score(X, y, dom, n_boot=100, n_perm=100)
+    r = daxis.daxis_score(X, y, dom, n_boot=100, n_perm=100)
     assert r.score > 0.6
     assert r.regime == "GO"
     assert r.p_value < 0.05
@@ -34,14 +34,14 @@ def test_go_when_aligned():
 def test_nogo_when_orthogonal():
     X, y, dom = _stack([_binary_domain(angle=0.0, seed=1),
                         _binary_domain(angle=np.pi / 2, seed=2)])
-    r = gcda.gcda_score(X, y, dom, n_boot=100, n_perm=100)
+    r = daxis.daxis_score(X, y, dom, n_boot=100, n_perm=100)
     assert abs(r.score) < 0.3
     assert r.regime in ("NO-GO", "BORDERLINE")
 
 
 def test_matrix_is_symmetric_unit_diagonal():
     X, y, dom = _stack([_binary_domain(seed=s) for s in range(4)])
-    r = gcda.gcda_score(X, y, dom, n_boot=50, n_perm=50)
+    r = daxis.daxis_score(X, y, dom, n_boot=50, n_perm=50)
     assert r.matrix.shape == (4, 4)
     assert np.allclose(np.diag(r.matrix), 1.0)
     assert np.allclose(r.matrix, r.matrix.T)
@@ -58,7 +58,7 @@ def test_multiclass_classwise_aligned():
         return X, y
 
     X, y, dm = _stack([dom(1), dom(2)])
-    r = gcda.gcda_score(X, y, dm, mode="classwise", n_boot=50, n_perm=50)
+    r = daxis.daxis_score(X, y, dm, mode="classwise", n_boot=50, n_perm=50)
     assert r.mode == "classwise"
     assert r.score > 0.5
 
@@ -74,16 +74,16 @@ def test_subspace_mode_runs():
         return X, y
 
     X, y, dm = _stack([dom(1), dom(2)])
-    r = gcda.gcda_score(X, y, dm, mode="subspace", n_boot=30, n_perm=30)
+    r = daxis.daxis_score(X, y, dm, mode="subspace", n_boot=30, n_perm=30)
     assert r.mode == "subspace"
     assert 0.0 <= r.score <= 1.0
 
 
 def test_report_and_serialisation():
     X, y, dom = _stack([_binary_domain(seed=1), _binary_domain(seed=2)])
-    r = gcda.gcda_score(X, y, dom, n_boot=50, n_perm=50)
+    r = daxis.daxis_score(X, y, dom, n_boot=50, n_perm=50)
     text = r.report()
-    assert "GCDA" in text and "regime" in text
+    assert "DAXIS" in text and "regime" in text
     d = r.to_dict()
     assert set(["score", "regime", "matrix"]).issubset(d)
 
@@ -92,4 +92,4 @@ def test_missing_class_raises():
     X, y, dom = _stack([_binary_domain(seed=1), _binary_domain(seed=2)])
     y[dom == "d0"] = 0  # wipe one class from a domain
     with pytest.raises(ValueError):
-        gcda.gcda_score(X, y, dom, n_boot=0, n_perm=0)
+        daxis.daxis_score(X, y, dom, n_boot=0, n_perm=0)

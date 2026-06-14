@@ -4,7 +4,7 @@
 """
 import numpy as np
 
-import gcda
+import daxis
 
 
 def make_domain(axis, n=400, p=20, seed=0):
@@ -37,7 +37,7 @@ print("\n### GO: three domains that share (nearly) the same discriminant axis ##
 X, y, dom = stack(make_domain(ax(P, (0, 1.0)), seed=1),
                   make_domain(ax(P, (0, 1.0), (1, 0.15)), seed=2),   # tiny tilt
                   make_domain(ax(P, (0, 1.0), (1, -0.15)), seed=3))
-res = gcda.gcda_score(X, y, dom)
+res = daxis.daxis_score(X, y, dom)
 print(res.report())
 res.plot("quickstart_go.png")
 print("[saved] quickstart_go.png")
@@ -46,7 +46,7 @@ print("\n### NO-GO: three mutually orthogonal discriminant axes ###")
 X, y, dom = stack(make_domain(ax(P, (0, 1.0)), seed=1),
                   make_domain(ax(P, (1, 1.0)), seed=2),
                   make_domain(ax(P, (2, 1.0)), seed=3))
-res = gcda.gcda_score(X, y, dom)
+res = daxis.daxis_score(X, y, dom)
 print(res.report())
 res.plot("quickstart_nogo.png")
 print("[saved] quickstart_nogo.png")

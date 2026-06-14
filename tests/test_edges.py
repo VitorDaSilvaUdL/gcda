@@ -2,7 +2,7 @@
 import numpy as np
 import pytest
 
-import gcda
+import daxis
 
 
 def _two_domains(seed=0, n=200, p=10, angle=0.1):
@@ -21,8 +21,8 @@ def _two_domains(seed=0, n=200, p=10, angle=0.1):
 
 def test_deterministic_with_seed():
     X, y, d = _two_domains()
-    a = gcda.gcda_score(X, y, d, n_boot=80, n_perm=80, random_state=42)
-    b = gcda.gcda_score(X, y, d, n_boot=80, n_perm=80, random_state=42)
+    a = daxis.daxis_score(X, y, d, n_boot=80, n_perm=80, random_state=42)
+    b = daxis.daxis_score(X, y, d, n_boot=80, n_perm=80, random_state=42)
     assert a.score == b.score
     assert a.ci == b.ci
     assert a.p_value == b.p_value
@@ -30,7 +30,7 @@ def test_deterministic_with_seed():
 
 def test_no_resampling_path():
     X, y, d = _two_domains()
-    r = gcda.gcda_score(X, y, d, n_boot=0, n_perm=0)
+    r = daxis.daxis_score(X, y, d, n_boot=0, n_perm=0)
     assert np.isnan(r.ci[0]) and np.isnan(r.ci[1])
     assert np.isnan(r.p_value)
     assert r.regime == "BORDERLINE"          # cannot decide without the CI/null
@@ -39,15 +39,15 @@ def test_no_resampling_path():
 
 def test_wider_confidence_level_is_wider():
     X, y, d = _two_domains()
-    narrow = gcda.gcda_score(X, y, d, n_boot=200, n_perm=0, ci=80, random_state=3)
-    wide = gcda.gcda_score(X, y, d, n_boot=200, n_perm=0, ci=99, random_state=3)
+    narrow = daxis.daxis_score(X, y, d, n_boot=200, n_perm=0, ci=80, random_state=3)
+    wide = daxis.daxis_score(X, y, d, n_boot=200, n_perm=0, ci=99, random_state=3)
     assert (wide.ci[1] - wide.ci[0]) > (narrow.ci[1] - narrow.ci[0])
 
 
 def test_invalid_mode_raises():
     X, y, d = _two_domains()
     with pytest.raises(ValueError):
-        gcda.gcda_score(X, y, d, mode="nope", n_boot=0, n_perm=0)
+        daxis.daxis_score(X, y, d, mode="nope", n_boot=0, n_perm=0)
 
 
 def test_binary_mode_with_three_classes_raises():
@@ -56,17 +56,17 @@ def test_binary_mode_with_three_classes_raises():
     y = rng.integers(0, 3, 300)
     d = np.array(["a"] * 150 + ["b"] * 150)
     with pytest.raises(ValueError):
-        gcda.gcda_score(X, y, d, mode="binary", n_boot=0, n_perm=0)
+        daxis.daxis_score(X, y, d, mode="binary", n_boot=0, n_perm=0)
 
 
 def test_single_domain_raises():
     X, y, _ = _two_domains()
     d = np.array(["only"] * len(y))
     with pytest.raises(ValueError):
-        gcda.gcda_score(X, y, d, n_boot=0, n_perm=0)
+        daxis.daxis_score(X, y, d, n_boot=0, n_perm=0)
 
 
 def test_length_mismatch_raises():
     X, y, d = _two_domains()
     with pytest.raises(ValueError):
-        gcda.gcda_score(X, y[:-1], d, n_boot=0, n_perm=0)
+        daxis.daxis_score(X, y[:-1], d, n_boot=0, n_perm=0)

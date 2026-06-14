@@ -1,6 +1,6 @@
-"""GCDAResult: the data object returned by :func:`gcda.gcda_score`.
+"""DAXISResult: the data object returned by :func:`daxis.daxis_score`.
 
-It carries the GCDA score, its bootstrap confidence interval, the permutation
+It carries the DAXIS score, its bootstrap confidence interval, the permutation
 null, the full pairwise cosine matrix and the GO / NO-GO verdict, and knows how
 to print a detailed report and draw the cosine-matrix heatmap.  It depends only
 on ``numpy`` (``matplotlib`` is imported lazily inside :meth:`plot`).
@@ -14,14 +14,14 @@ import numpy as np
 
 
 @dataclass
-class GCDAResult:
-    """Outcome of a GCDA analysis.
+class DAXISResult:
+    """Outcome of a DAXIS analysis.
 
     Attributes
     ----------
     score : float
         Mean off-diagonal class-discriminant cosine across domains
-        (the GCDA score).  ``+1`` shared boundary, ``0`` unrelated.
+        (the DAXIS score).  ``+1`` shared boundary, ``0`` unrelated.
     ci : (float, float)
         Bootstrap confidence interval on ``score``.
     ci_level : float
@@ -86,12 +86,12 @@ class GCDAResult:
         n = len(self.domains)
         out = [
             "=" * 66,
-            "  GCDA report  --  Geometric Cross-Domain Adaptability",
+            "  DAXIS report  --  Discriminant-Axis Alignment",
             "=" * 66,
             f"  data      : {self.n_samples} samples | {self.n_features} features"
             f" | {self.n_classes} classes | {n} domains",
             f"  mode      : {self.mode}",
-            f"  GCDA score: {self.score:+.3f}"
+            f"  DAXIS score: {self.score:+.3f}"
             f"   ({self.ci_level:.0f}% CI [{lo:+.3f}, {hi:+.3f}])",
             f"  null      : mean {self.null_mean:+.3f} | 95th pct "
             f"{self.null_hi:+.3f} | p = {self.p_value:.3f}",
@@ -117,7 +117,7 @@ class GCDAResult:
 
     def __str__(self) -> str:
         lo, hi = self.ci
-        return (f"GCDAResult(score={self.score:+.3f}, "
+        return (f"DAXISResult(score={self.score:+.3f}, "
                 f"CI=[{lo:+.3f},{hi:+.3f}], p={self.p_value:.3f}, "
                 f"regime={self.regime})")
 
@@ -159,7 +159,7 @@ class GCDAResult:
                 ax.text(b, a, f"{self.matrix[a, b]:.2f}", ha="center",
                         va="center", fontsize=7,
                         color="white" if abs(self.matrix[a, b]) > 0.6 else "black")
-        ax.set_title(f"GCDA {self.score:+.2f}  [{self.regime}]", fontsize=10)
+        ax.set_title(f"DAXIS {self.score:+.2f}  [{self.regime}]", fontsize=10)
         if own:
             fig.colorbar(im, ax=ax, fraction=0.046, pad=0.04,
                          label="discriminant cosine")

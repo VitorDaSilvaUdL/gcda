@@ -1,4 +1,4 @@
-"""Run GCDA from a pandas DataFrame / CSV -- the tabular workflow.
+"""Run DAXIS from a pandas DataFrame / CSV -- the tabular workflow.
 
 Shows the two equivalent entry points (a DataFrame in memory, and the same data
 written to CSV and read back), plus the command-line form.
@@ -8,7 +8,7 @@ written to CSV and read back), plus the command-line form.
 import numpy as np
 import pandas as pd
 
-import gcda
+import daxis
 
 
 def make_site(axis, n=300, p=8, seed=0):
@@ -34,12 +34,12 @@ for i, tilt in enumerate([0.0, 0.1, -0.1]):
 data = pd.concat(blocks, ignore_index=True)
 
 # 1) straight from the DataFrame (feature columns auto-detected)
-res = gcda.from_dataframe(data, label_col="y", domain_col="site")
+res = daxis.from_dataframe(data, label_col="y", domain_col="site")
 print(res.report())
 
 # 2) the same via a CSV on disk
 data.to_csv("sites.csv", index=False)
-res_csv = gcda.from_dataframe(pd.read_csv("sites.csv"), label_col="y", domain_col="site")
+res_csv = daxis.from_dataframe(pd.read_csv("sites.csv"), label_col="y", domain_col="site")
 assert abs(res.score - res_csv.score) < 1e-9
 print("\nCSV round-trip score matches:", round(res_csv.score, 3))
-print("Command line equivalent:\n  gcda sites.csv --label y --domain site --plot m.png")
+print("Command line equivalent:\n  daxis sites.csv --label y --domain site --plot m.png")

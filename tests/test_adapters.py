@@ -2,7 +2,7 @@
 import numpy as np
 import pytest
 
-import gcda
+import daxis
 
 
 def _toy(seed=0, n=200, p=10):
@@ -22,8 +22,8 @@ def _toy(seed=0, n=200, p=10):
 
 def test_from_arrays_is_alias():
     X, y, d = _toy()
-    a = gcda.from_arrays(X, y, d, n_boot=50, n_perm=50, random_state=1)
-    b = gcda.gcda_score(X, y, d, n_boot=50, n_perm=50, random_state=1)
+    a = daxis.from_arrays(X, y, d, n_boot=50, n_perm=50, random_state=1)
+    b = daxis.daxis_score(X, y, d, n_boot=50, n_perm=50, random_state=1)
     assert a.score == b.score
 
 
@@ -33,9 +33,9 @@ def test_from_dataframe_matches_arrays():
     df = pd.DataFrame(X, columns=[f"f{j}" for j in range(X.shape[1])])
     df["y"] = y
     df["dom"] = d
-    r_df = gcda.from_dataframe(df, label_col="y", domain_col="dom",
+    r_df = daxis.from_dataframe(df, label_col="y", domain_col="dom",
                               n_boot=50, n_perm=50, random_state=7)
-    r_ar = gcda.gcda_score(X, y, d, n_boot=50, n_perm=50, random_state=7)
+    r_ar = daxis.daxis_score(X, y, d, n_boot=50, n_perm=50, random_state=7)
     assert abs(r_df.score - r_ar.score) < 1e-9
     assert r_df.domains == r_ar.domains
 
@@ -47,7 +47,7 @@ def test_from_dataframe_autodetects_features():
     df["label"] = y
     df["domain"] = d
     # default label_col/domain_col, feature_cols auto = everything else
-    r = gcda.from_dataframe(df, n_boot=30, n_perm=30)
+    r = daxis.from_dataframe(df, n_boot=30, n_perm=30)
     assert r.n_features == X.shape[1]
 
 
@@ -59,7 +59,7 @@ def test_csv_round_trip(tmp_path):
     df["site"] = d
     path = tmp_path / "data.csv"
     df.to_csv(path, index=False)
-    r = gcda.from_dataframe(pd.read_csv(path), label_col="y", domain_col="site",
+    r = daxis.from_dataframe(pd.read_csv(path), label_col="y", domain_col="site",
                            n_boot=30, n_perm=30)
     assert r.regime in ("GO", "BORDERLINE", "NO-GO")
     assert r.matrix.shape == (3, 3)
